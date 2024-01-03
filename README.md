@@ -34,9 +34,13 @@ Current Seconds
     }
 
 
+
+## Personal
+
 name :Manikandan r 
 Qualification : Mca
 Role : Software Developer (flutter)
+skills : flutter,Rest,Bloc,postgressql,firebase,pushnotification etc...
 Joining : Immediate join
 
    
