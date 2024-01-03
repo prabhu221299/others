@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
-
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   int counter = 5; // Initial countdown value in seconds
   int randomNo = 0;
@@ -16,8 +15,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   int failureScoreCounts = 0;
   bool isSuccess = false;
   bool isNoAction = true;
-
-
 
   DashboardBloc() : super(DashboardInitial()) {
     on<GenerateRandomNoEvent>(generateRandomNoEvent);
@@ -56,8 +53,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         60); // Generates a random number between 0 (inclusive) and 60 (exclusive)
   }
 
-
-
   FutureOr generateRandomNoEvent(
       GenerateRandomNoEvent event, Emitter DashboardState) {
     isNoAction = false;
@@ -68,33 +63,27 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       isSuccess = true;
       successScoreCounts++;
       attemptCounts++;
-
     } else {
       emit(GetmsgState("Sorry try Again !"));
       isSuccess = false;
       failureScoreCounts++;
       attemptCounts++;
     }
-    isNoAction = true;
-
   }
 
   late Timer timer;
   FutureOr timerEvent(TimerEvent event, Emitter DashboardState) {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer timer) async{
-      if (counter!=0) {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
+      if (counter != 0) {
         counter--;
-      }
-      else if (counter==0 ) {
-        if(isNoAction ){
-          emit(GetmsgState("Sorry No Action!"));
-          await Future.delayed(Duration(seconds: 1));
-        }
+      } else if (counter == 0 || isNoAction && !isSuccess) {
+        isNoAction = true;
+        emit(NoActionState("Sorry No Action!"));
+        await Future.delayed(Duration(seconds: 1));
         counter = 5;
         attemptCounts++;
       }
-        emit(GetmsgState("Sorry tyr Again !"));
-
+      emit(DashboardInitial());
     });
   }
 }
